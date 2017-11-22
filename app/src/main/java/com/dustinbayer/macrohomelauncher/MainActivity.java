@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private View mDrawerView;
     //private View mNotesView;
     private View editBlur;
+    private boolean refreshed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,13 @@ public class MainActivity extends AppCompatActivity {
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleDrawer(mDrawerView);
+                if(mDrawerLayout.isDrawerOpen(mDrawerView)
+                        && !refreshed && !listIsAtTop()) {
+                    refreshed = true;
+                    gridFragment.refresh();
+                } else {
+                    toggleDrawer(mDrawerView);
+                }
             }
         });
 
@@ -100,11 +107,13 @@ public class MainActivity extends AppCompatActivity {
                 /** Called when a drawer has settled in a completely closed state. */
                 public void onDrawerClosed(View drawerView) {
                     mDrawerToggle.syncState();
+                    homeButton.setRotation(0);
                 }
 
                 /** Called when a drawer has settled in a completely open state. */
                 public void onDrawerOpened(View drawerView) {
                     mDrawerToggle.syncState();
+                    homeButton.setRotation(180);
                 }
 
             };
@@ -153,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
         });
         clearKeys();
 
+    }
+
+    private boolean listIsAtTop()   {
+       // if(gridFragment.lv.getChildCount() == 0) return true;
+        return gridFragment.lv.getChildAt(0).getTop() == 0;
     }
 
     @Override
@@ -278,8 +292,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toggleDrawer(View drawer) {
-
-
+        refreshed = false;
         if(mDrawerLayout.isDrawerOpen(drawer)) {
             spinButton(drawer, false);
             mDrawerLayout.closeDrawer(drawer, true);

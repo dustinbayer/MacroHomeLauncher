@@ -57,6 +57,8 @@ public class GridFragment extends Fragment {
     CharSequence mEmptyText;
     boolean mGridShown;
 
+    public GridView lv;
+
     public GridFragment() { }
 
     /**
@@ -107,7 +109,7 @@ public class GridFragment extends Fragment {
         lframe.addView(tv, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        GridView lv = new GridView(getActivity());
+        lv = new GridView(getActivity());
         lv.setId(android.R.id.list);
         lv.setDrawSelectorOnTop(false);
         lv.setColumnWidth(convertDpToPixels(60, getActivity()));
