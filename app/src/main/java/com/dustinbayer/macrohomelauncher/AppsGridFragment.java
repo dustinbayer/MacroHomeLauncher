@@ -35,9 +35,11 @@ public class AppsGridFragment extends GridFragment implements LoaderManager.Load
     }
 
     public void refresh() {
+        setGridShown(true, true);
        getLoaderManager().destroyLoader(0);
         // create the loader to load the apps list in background
         getLoaderManager().initLoader(0, null, this);
+        setGridShown(false);
     }
 
     @Override

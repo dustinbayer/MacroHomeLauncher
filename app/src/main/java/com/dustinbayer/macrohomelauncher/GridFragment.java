@@ -3,9 +3,11 @@ package com.dustinbayer.macrohomelauncher;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -92,6 +94,7 @@ public class GridFragment extends Fragment {
 
         ProgressBar progress = new ProgressBar(context, null,
                 android.R.attr.progressBarStyleLarge);
+        progress.setBackground(ContextCompat.getDrawable(context, R.drawable.circle_button));
         pframe.addView(progress, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -290,7 +293,7 @@ public class GridFragment extends Fragment {
      * @param animate If true, an animation will be used to transition to the
      * new state.
      */
-    private void setGridShown(boolean shown, boolean animate) {
+    public void setGridShown(boolean shown, boolean animate) {
         ensureGrid();
         if (mProgressContainer == null) {
             throw new IllegalStateException("Can't be used with a custom content view");
