@@ -56,7 +56,11 @@ public class AppListAdapter extends ArrayAdapter<AppModel> {
         final TextView macro;
 
         if (convertView == null) {
-            view = mInflater.inflate(R.layout.list_item_icon_text, parent, false);
+            if(((MainActivity)context).sharedPref.getInt("handness", R.layout.activity_main) == R.layout.activity_main_left) {
+                view = mInflater.inflate(R.layout.list_item_icon_text_left, parent, false);
+            } else {
+                view = mInflater.inflate(R.layout.list_item_icon_text, parent, false);
+            }
         } else {
             view = convertView;
         }

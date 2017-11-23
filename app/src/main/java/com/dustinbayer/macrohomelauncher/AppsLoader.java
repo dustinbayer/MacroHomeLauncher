@@ -4,6 +4,8 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 
 
@@ -59,6 +61,19 @@ public class AppsLoader extends AsyncTaskLoader<ArrayList<AppModel>> {
         AppModel app = new AppModel(context, info);
         app.mIcon = ContextCompat.getDrawable(context, R.drawable.circle_key);
         items.add(0 ,app);
+
+        ApplicationInfo infoColor = new ApplicationInfo();
+        infoColor.packageName = "com.dustinbayer.macrohomelauncher.colorpicker";
+        AppModel appColor = new AppModel(context, infoColor);
+        appColor.mIcon = ContextCompat.getDrawable(context, R.mipmap.ic_color_round);
+        items.add(1 ,appColor);
+
+        ApplicationInfo infoHand = new ApplicationInfo();
+        infoHand.packageName = "com.dustinbayer.macrohomelauncher.handness";
+        AppModel appHand = new AppModel(context, infoHand);
+        appHand.mIcon = ContextCompat.getDrawable(context, R.mipmap.ic_toggle_handedness_round);
+        items.add(2 ,appHand);
+
         return items;
     }
 

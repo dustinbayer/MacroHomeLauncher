@@ -2,30 +2,35 @@ package com.dustinbayer.macrohomelauncher;
 
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.eftimoff.patternview.PatternView;
 import com.eftimoff.patternview.cells.Cell;
+import com.rtugeek.android.colorseekbar.ColorSeekBar;
 
 import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SharedPreferences sharedPref;
+    public SharedPreferences sharedPref;
     private Boolean editMacro = false;
     private AppModel editApp;
     private TextView macroText;
@@ -33,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private AppsGridFragment gridFragment;
     private PatternView patternView;
-    private ImageButton homeButton;
+    private Button homeButton;
     //private ImageButton notesButton;
     private ActionBarDrawerToggle mDrawerToggle;
     private View mDrawerView;
@@ -42,13 +47,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean refreshed = false;
 
     public final static int MACRO_SIZE = 3;
+    private ColorSeekBar colorSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         sharedPref = getPreferences(Context.MODE_PRIVATE);
+        setContentView(sharedPref.getInt("handness", R.layout.activity_main));
 
         final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
         final Drawable wallpaperDrawable = wallpaperManager.getDrawable();
@@ -103,13 +109,21 @@ public class MainActivity extends AppCompatActivity {
                 /** Called when a drawer has settled in a completely closed state. */
                 public void onDrawerClosed(View drawerView) {
                     mDrawerToggle.syncState();
-                    homeButton.setRotation(0);
+                    if(sharedPref.getInt("handness", R.layout.activity_main) == R.layout.activity_main_left) {
+                        homeButton.setRotation(180);
+                    } else {
+                        homeButton.setRotation(0);
+                    }
                 }
 
                 /** Called when a drawer has settled in a completely open state. */
                 public void onDrawerOpened(View drawerView) {
                     mDrawerToggle.syncState();
-                    homeButton.setRotation(180);
+                    if(sharedPref.getInt("handness", R.layout.activity_main) == R.layout.activity_main_left) {
+                        homeButton.setRotation(0);
+                    } else {
+                        homeButton.setRotation(180);
+                    }
                 }
 
             };
@@ -147,6 +161,15 @@ public class MainActivity extends AppCompatActivity {
         });
         patternView.clearPattern();
 
+        colorSeekBar = findViewById(R.id.colorSlider);
+        colorSeekBar.setOnColorChangeListener(new ColorSeekBar.OnColorChangeListener() {
+            @Override
+            public void onColorChangeListener(int colorBarPosition, int alphaBarPosition, int color) {
+                setUIColor(color);
+            }
+        });
+
+        setUIColor(sharedPref.getInt("uiColor", 0xFFFFFF));
     }
 
     private boolean listIsAtTop()   {
@@ -288,11 +311,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void spinButton(View drawer, Boolean open) {
+        int start = 0;
+        int end = 180;
+        if(sharedPref.getInt("handness", R.layout.activity_main) == R.layout.activity_main_left) {
+            start = 180;
+            end = 0;
+        }
         if(drawer == mDrawerView){
             if(open)
-                homeButton.animate().rotation(180).start();
+                homeButton.animate().rotation(end).start();
             else
-                homeButton.animate().rotation(0).start();
+                homeButton.animate().rotation(start).start();
         }
 //        else if (drawer == mNotesView) {
 //            if(open)
@@ -306,6 +335,10 @@ public class MainActivity extends AppCompatActivity {
     public void openApp(String val) {
         if(val.equals("com.dustinbayer.macrohomelauncher.home")) {
             toggleDrawer(mDrawerView);
+        } else if(val.equals("com.dustinbayer.macrohomelauncher.colorpicker")) {
+            openColorPicker();
+        } else if(val.equals("com.dustinbayer.macrohomelauncher.handness")) {
+            setHandness();
         } else {
 
             Intent intent = getPackageManager().getLaunchIntentForPackage(val);
@@ -318,6 +351,53 @@ public class MainActivity extends AppCompatActivity {
        }
     }
 
+    public void openColorPicker() {
+        if(colorSeekBar.getVisibility() == View.VISIBLE) {
+            colorSeekBar.setVisibility(View.GONE);
+        } else {
+            colorSeekBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setUIColor(int color) {
+        if(homeButton  != null) {
+            homeButton.getBackground().setTint(color);
+            ((Button)findViewById(R.id.button_q)).getBackground().setTint(color);
+            ((Button)findViewById(R.id.button_w)).getBackground().setTint(color);
+            ((Button)findViewById(R.id.button_e)).getBackground().setTint(color);
+            ((Button)findViewById(R.id.button_r)).getBackground().setTint(color);
+            ((Button)findViewById(R.id.button_t)).getBackground().setTint(color);
+            ((Button)findViewById(R.id.button_y)).getBackground().setTint(color);
+            ((Button)findViewById(R.id.button_u)).getBackground().setTint(color);
+            ((Button)findViewById(R.id.button_i)).getBackground().setTint(color);
+            ((Button)findViewById(R.id.button_o)).getBackground().setTint(color);
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt("uiColor", color);
+            editor.commit();
+        }
+
+    }
+
+    public void setHandness() {
+        Boolean isRight = true;
+
+        if(sharedPref.getInt("handness", R.layout.activity_main) == R.layout.activity_main)
+            isRight = false;
+
+        if(isRight) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt("handness", R.layout.activity_main);
+            editor.commit();
+        } else {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt("handness", R.layout.activity_main_left);
+            editor.commit();
+        }
+
+        finish();
+        startActivity(getIntent());
+    }
 }
 
 

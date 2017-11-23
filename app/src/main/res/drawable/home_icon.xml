@@ -5,12 +5,4 @@
             <solid android:color="#ffffff"/>
         </shape>
     </item>
-    <item android:drawable="@drawable/triangle"
-        android:top="18dp"
-        android:bottom="18dp"
-        android:left="18dp"
-        android:right="18dp">
-
-
-    </item>
 </layer-list>

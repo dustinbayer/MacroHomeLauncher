@@ -70,6 +70,10 @@ public class AppsGridFragment extends GridFragment implements LoaderManager.Load
 
             if(app.getApplicationPackageName().equals("com.dustinbayer.macrohomelauncher.home"))
                 ((MainActivity) getActivity()).openApp(app.getApplicationPackageName());
+            else if(app.getApplicationPackageName().equals("com.dustinbayer.macrohomelauncher.colorpicker"))
+                ((MainActivity) getActivity()).openColorPicker();
+            else if(app.getApplicationPackageName().equals("com.dustinbayer.macrohomelauncher.handness"))
+                ((MainActivity) getActivity()).setHandness();
             else {
                 Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(app.getApplicationPackageName());
 
