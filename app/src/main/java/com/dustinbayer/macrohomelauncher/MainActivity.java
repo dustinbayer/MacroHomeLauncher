@@ -12,10 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private Boolean editMacro = false;
     private AppModel editApp;
     private TextView macroText;
-    private int numCells = 0;
 
     private DrawerLayout mDrawerLayout;
     private AppsGridFragment gridFragment;
@@ -44,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     //private View mNotesView;
     private View editBlur;
     private boolean refreshed = false;
+
+    public final static int MACRO_SIZE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setup() {
-        //editMacro("QWE","HOME");
-
         homeButton = findViewById(R.id.apps_button);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,28 +124,15 @@ public class MainActivity extends AppCompatActivity {
                 editBlur.setVisibility(View.GONE);
                 macroText.setText(getMacro(editApp.getApplicationPackageName()));
                 editMacro = false;
-                clearKeys();
+                patternView.clearPattern();
             }
         });
 
         patternView = findViewById(R.id.patternView);
-//        patternView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-//                    if(numCells <= 2)
-//                        clearKeys();
-//                }
-//                return true;
-//            }
-//        });
-        patternView.setOnPatternCellAddedListener(new PatternView.OnPatternCellAddedListener() {
-
+        patternView.setOnPatternDetectedListener(new PatternView.OnPatternDetectedListener() {
             @Override
-            public void onPatternCellAdded() {
-                numCells++;
-
-                if(numCells == 3) {
+            public void onPatternDetected() {
+                if(patternView.getPattern().size() == MACRO_SIZE) {
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -157,10 +140,12 @@ public class MainActivity extends AppCompatActivity {
                             convertKeys(patternView.getPattern());
                         }
                     }, 100);
+                } else {
+                    patternView.clearPattern();
                 }
             }
         });
-        clearKeys();
+        patternView.clearPattern();
 
     }
 
@@ -184,47 +169,47 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void clearKeys() {
-        patternView.clearPattern();
-        numCells = 0;
-
-    }
-
     private void convertKeys(List<Cell> cells) {
-       String key = "";
-        for(Cell cell : cells) {
-            Log.d("PATTERN", cell.getId());
-            switch (cell.getId()) {
-                case "000-000":
-                    key = key + "Q";
-                    break;
-                case "000-001":
-                    key = key + "W";
-                    break;
-                case "000-002":
-                    key = key + "E";
-                    break;
-                case "001-000":
-                    key = key + "R";
-                    break;
-                case "001-001":
-                    key = key + "T";
-                    break;
-                case "001-002":
-                    key = key + "Y";
-                    break;
-                case "002-000":
-                    key = key + "U";
-                    break;
-                case "002-001":
-                    key = key + "I";
-                    break;
-                case "002-002":
-                    key = key + "O";
-                    break;
-            }
-        }
-        checkKeys(key);
+       if(cells.size() == MACRO_SIZE) {
+
+           String key = "";
+           for (int i = 0; i < MACRO_SIZE; i++) {
+               Cell cell = cells.get(i);
+               Log.d("PATTERN", cell.getId());
+               switch (cell.getId()) {
+                   case "000-000":
+                       key = key + "Q";
+                       break;
+                   case "000-001":
+                       key = key + "W";
+                       break;
+                   case "000-002":
+                       key = key + "E";
+                       break;
+                   case "001-000":
+                       key = key + "R";
+                       break;
+                   case "001-001":
+                       key = key + "T";
+                       break;
+                   case "001-002":
+                       key = key + "Y";
+                       break;
+                   case "002-000":
+                       key = key + "U";
+                       break;
+                   case "002-001":
+                       key = key + "I";
+                       break;
+                   case "002-002":
+                       key = key + "O";
+                       break;
+               }
+
+           }
+
+           checkKeys(key);
+       }
     }
 
     private void checkKeys(String macro) {
@@ -235,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                 editApp.setMacro(macro);
                 macroText.setText(macro);
             } else {
-                clearKeys();
+                patternView.clearPattern();
                 macroText.setText("");
             }
         } else {
@@ -248,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        clearKeys();
+        patternView.clearPattern();
     }
 
     public void setMacro(String app, String macro) {
@@ -263,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         editApp = app;
         macroText = macro;
         editMacro = true;
-        clearKeys();
+        patternView.clearPattern();
         editBlur.setVisibility(View.VISIBLE);
     }
 
