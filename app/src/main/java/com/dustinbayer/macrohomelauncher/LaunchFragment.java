@@ -2,6 +2,7 @@ package com.dustinbayer.macrohomelauncher;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,11 @@ public class LaunchFragment extends Fragment {
 
     private MainActivity main;
     private View view;
+
+    private DrawerLayout drawerLayout;
+
+    private AppsListFragment appsListFragment;
+    public AppsListFragment getAppsListFragment() { return appsListFragment; }
 
     public static LaunchFragment newInstance() { return new LaunchFragment(); }
 
@@ -32,6 +38,9 @@ public class LaunchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(main.getSharedPref().getInt(main.getString(R.string.launch_orientation), R.layout.fragment_launch_right), container, false);
+        drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+        appsListFragment = AppsListFragment.newInstance();
+        getChildFragmentManager().beginTransaction().add(R.id.apps_list, appsListFragment).commit();
         return view;
     }
 
@@ -46,5 +55,6 @@ public class LaunchFragment extends Fragment {
     public void cleanUp() {
         main = null;
         view = null;
+        appsListFragment.cleanUp();
     }
 }

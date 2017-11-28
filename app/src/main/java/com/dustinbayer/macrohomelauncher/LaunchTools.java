@@ -12,7 +12,9 @@ import java.util.List;
 public class LaunchTools {
 
     private MainActivity main;
+
     private List<AppModel> launchToolsList;
+    public List<AppModel> getLaunchToolsList() { return launchToolsList; }
 
     private LaunchTools(MainActivity main) {
         this.main = main;
