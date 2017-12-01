@@ -5,7 +5,6 @@ import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     private MainActivity main;
     private View view;
 
-    private RecyclerView recyclerView;
-    public RecyclerView getRecyclerView() { return recyclerView; }
+    private ListView listView;
+    public ListView getRecyclerView() { return listView; }
 
     private AppsListAdapter appsListAdapter;
     public AppsListAdapter getAppsListAdapter() { return appsListAdapter; }
@@ -60,10 +60,7 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_appslist, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.apps_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(main);
-        recyclerView.setLayoutManager(layoutManager);
+        listView = (ListView) view.findViewById(R.id.apps_list_view);
         progressView = createProgressView();
         setListShown(false,true);
 
@@ -80,7 +77,7 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
 
         ProgressBar progress = new ProgressBar(main, null,
                 android.R.attr.progressBarStyleLarge);
-        progress.setBackground(ContextCompat.getDrawable(main, R.drawable.circle_white));
+        progress.setBackground(ContextCompat.getDrawable(main, R.drawable.circle_clear));
         pframe.addView(progress, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -95,7 +92,7 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(Loader<ArrayList<AppModel>> loader, ArrayList<AppModel> apps) {
         appsListAdapter = new AppsListAdapter(main, apps);
-        recyclerView.setAdapter(appsListAdapter);
+        listView.setAdapter(appsListAdapter);
 
         if (isResumed()) {
             setListShown(true, true);
@@ -122,26 +119,26 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
             if (animate) {
                 progressView.startAnimation(AnimationUtils.loadAnimation(
                         main, android.R.anim.fade_out));
-                recyclerView.startAnimation(AnimationUtils.loadAnimation(
+                listView.startAnimation(AnimationUtils.loadAnimation(
                         main, android.R.anim.fade_in));
             } else {
                 progressView.clearAnimation();
-                recyclerView.clearAnimation();
+                listView.clearAnimation();
             }
             progressView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.VISIBLE);
         } else {
             if (animate) {
                 progressView.startAnimation(AnimationUtils.loadAnimation(
                         main, android.R.anim.fade_in));
-                recyclerView.startAnimation(AnimationUtils.loadAnimation(
+                listView.startAnimation(AnimationUtils.loadAnimation(
                         main, android.R.anim.fade_out));
             } else {
                 progressView.clearAnimation();
-                recyclerView.clearAnimation();
+                listView.clearAnimation();
             }
             progressView.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+            listView.setVisibility(View.GONE);
         }
 
     }
@@ -149,11 +146,19 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     public void cleanUp() {
         main = null;
         view = null;
-        appsListAdapter.cleanUp();
-        recyclerView = null;
-        installedApps.clear();
-        installedApps = null;
-        loader.cleanUp();
+        listView = null;
         progressView = null;
+        if(appsListAdapter != null) {
+            appsListAdapter.cleanUp();
+            appsListAdapter = null;
+        }
+        if(installedApps != null) {
+            installedApps.clear();
+            installedApps = null;
+        }
+        if(loader != null) {
+            loader.cleanUp();
+            loader = null;
+        }
     }
 }

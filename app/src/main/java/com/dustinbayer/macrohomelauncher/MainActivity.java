@@ -68,11 +68,10 @@ public class MainActivity extends AppCompatActivity {
     public void reloadLaunchFragment() {
         launchFragment.cleanUp();
         launchFragment = LaunchFragment.newInstance();
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, launchFragment);
 
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 }
 

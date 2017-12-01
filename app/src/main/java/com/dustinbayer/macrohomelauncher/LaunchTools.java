@@ -27,34 +27,24 @@ public class LaunchTools {
         appDrawerTool.setIcon(main.getDrawable(R.mipmap.ic_appdrawer_round));
         launchToolsList.add(appDrawerTool);
 
-        //Change UI color
-        ApplicationInfo uiColorInfo = new ApplicationInfo();
-        uiColorInfo.packageName = main.getString(R.string.launchtool_uicolor);
-        AppModel uiColorTool = AppModel.newInstance(main, uiColorInfo);
-        uiColorTool.setIcon(main.getDrawable(R.mipmap.ic_uicolor_round));
-        launchToolsList.add(uiColorTool);
-
         //Switch launch orientation
         ApplicationInfo launchOrientationInfo = new ApplicationInfo();
         launchOrientationInfo.packageName = main.getString(R.string.launchtool_launchorientation);
         AppModel launchOrientationTool = AppModel.newInstance(main, launchOrientationInfo);
         launchOrientationTool.setIcon(main.getDrawable(R.mipmap.ic_launchorientation_round));
         launchToolsList.add(launchOrientationTool);
+
     }
 
     public static LaunchTools newInstance(MainActivity main) { return new LaunchTools(main); }
 
-    public void runTool(AppModel tool) {
+    public boolean runTool(AppModel tool) {
         String name = tool.getApplicationPackageName();
 
         //Toggle app drawer
         if (name.equals(main.getString(R.string.launchtool_appdrawer))) {
             main.getLaunchFragment().toggleAppDrawer();
-        }
-
-        //Change UI color
-        else if (name.equals(main.getString(R.string.launchtool_uicolor))) {
-            main.getLaunchFragment().changeUiColor();
+            return true;
         }
 
         //Switch launch orientation
@@ -69,7 +59,10 @@ public class LaunchTools {
             editor.commit();
 
             main.reloadLaunchFragment();
+            return true;
         }
+
+        return false;
     }
 
     public void cleanUp() {

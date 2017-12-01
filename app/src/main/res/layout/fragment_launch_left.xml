@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -12,12 +13,151 @@
             android:id="@+id/apps_list"
             android:layout_width="170dp"
             android:layout_height="match_parent"
-            android:background="@drawable/gradient_left"
-            android:layout_gravity="start"
+            android:background="@drawable/gradient_right"
+            android:layout_gravity="end"
             android:fillViewport="true"
             android:paddingTop="6dp"
             android:paddingBottom="6dp" />
 
     </android.support.v4.widget.DrawerLayout>
+
+    <View
+        android:id="@+id/edit_blur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="visible"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <LinearLayout
+        android:id="@+id/macro_bar"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="6dp"
+        >
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            >
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                >
+                <View
+                    android:id="@+id/button_1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <View
+                    android:id="@+id/button_2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <View
+                    android:id="@+id/button_3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            >
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <View
+                    android:id="@+id/button_4"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <View
+                    android:id="@+id/button_5"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <View
+                    android:id="@+id/button_6"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <View
+                    android:id="@+id/button_7"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <View
+                    android:id="@+id/button_8"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <View
+                    android:id="@+id/button_9"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.eftimoff.patternview.PatternView
+        xmlns:patternview="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/patternView"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="6dp"
+        patternview:circleSize="52dp"
+        patternview:pathColor="#ffffff"
+        patternview:circleColor="#ffffff"
+        patternview:dotColor="#ffffff"
+        patternview:gridRows="3"
+        patternview:gridColumns="3"/>
 
 </RelativeLayout>
