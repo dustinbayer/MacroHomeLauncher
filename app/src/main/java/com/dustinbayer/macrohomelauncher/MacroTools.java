@@ -1,5 +1,7 @@
 package com.dustinbayer.macrohomelauncher;
 
+import android.widget.LinearLayout;
+
 import com.eftimoff.patternview.cells.Cell;
 
 import java.util.List;

@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,12 +52,6 @@ public class LaunchFragment extends Fragment {
         main = (MainActivity) getActivity();
     }
 
-    /**
-     * TO-DO
-     * - Add initial tutorial
-     * - LaunchTool macros not working
-     */
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -70,12 +63,16 @@ public class LaunchFragment extends Fragment {
         editBlur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!main.getSharedPref().getBoolean("firstTime", true)) {
+                if(!main.getSharedPref().getBoolean(main.getString(R.string.first_time), true)) {
                     editBlur.setVisibility(View.GONE);
                 }
             }
         });
-        editBlur.setVisibility(View.GONE);
+        if(main.getSharedPref().getBoolean(main.getString(R.string.first_time), true)) {
+            drawerLayout.openDrawer(view.findViewById(R.id.apps_list));
+            editBlur.setVisibility(View.VISIBLE);
+        }
+        
         patternView = view.findViewById(R.id.patternView);
         patternView.setOnPatternCellAddedListener(new PatternView.OnPatternCellAddedListener() {
             @Override
@@ -127,6 +124,15 @@ public class LaunchFragment extends Fragment {
     }
 
     private void checkKeys(List<Cell> cells) {
+        if(main.getSharedPref().getBoolean(main.getString(R.string.first_time), true)) {
+            setMacro(main.getString(R.string.launchtool_appdrawer), cells);
+            SharedPreferences.Editor editor = main.getSharedPref().edit();
+            editor.putBoolean(main.getString(R.string.first_time), false);
+            editor.commit();
+            clearPattern();
+            return;
+        }
+
         String key = MacroTools.cellsToKey(cells);
         if(cells.size() == MacroTools.MACRO_SIZE) {
             if (editMacro && !macroExists(key))

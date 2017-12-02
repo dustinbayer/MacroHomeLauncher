@@ -101,6 +101,11 @@ public class AppsListAdapter extends BaseAdapter {
             }
         });
 
+        if(holder.getApp().getApplicationPackageName().equals(main.getString(R.string.launchtool_appdrawer))) {
+            if (main.getSharedPref().getBoolean(main.getString(R.string.first_time), true)) {
+                main.getLaunchFragment().editMacro(app, macroLayout);
+            }
+        }
 
         return view;
     }
