@@ -135,10 +135,12 @@ public class LaunchFragment extends Fragment {
 
         String key = MacroTools.cellsToKey(cells);
         if(cells.size() == MacroTools.MACRO_SIZE) {
-            if (editMacro && !macroExists(key))
-                setMacro(editApp.getApplicationPackageName(), cells);
-            else
+            if (editMacro) {
+                if(!macroExists(key))
+                    setMacro(editApp.getApplicationPackageName(), cells);
+            } else {
                 openApp(getApp(key));
+            }
         }
         clearPattern();
     }
