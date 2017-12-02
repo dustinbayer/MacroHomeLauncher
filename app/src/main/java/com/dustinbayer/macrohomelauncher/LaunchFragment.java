@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +55,8 @@ public class LaunchFragment extends Fragment {
 
     /**
      * TO-DO
+     * - Add initial tutorial
      * - LaunchTool macros not working
-     * - 3 pattern opens default app
      */
 
     @Override
@@ -117,6 +118,9 @@ public class LaunchFragment extends Fragment {
     }
 
     private void clearPattern() {
+        if(view == null)
+            return;
+
         for(int i = 0; i < 9; i ++)
             view.findViewById(MacroTools.getButtonId(i)).setBackground(ContextCompat.getDrawable(main, R.drawable.circle_clear));
         patternView.clearPattern();
@@ -190,6 +194,9 @@ public class LaunchFragment extends Fragment {
     }
 
     public boolean openApp(String val) {
+        if(val == null || main.getLaunchTools().runTool(val))
+            return false;
+
         Intent intent = main.getPackageManager().getLaunchIntentForPackage(val);
 
         if (intent != null) {
@@ -206,6 +213,10 @@ public class LaunchFragment extends Fragment {
         } else {
             drawerLayout.openDrawer(drawerView, true);
         }
+    }
+
+    public boolean isDrawerOpen() {
+        return drawerLayout.isDrawerOpen(view.findViewById(R.id.apps_list));
     }
 
     public void cleanUp() {

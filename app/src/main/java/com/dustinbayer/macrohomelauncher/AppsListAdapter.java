@@ -62,8 +62,7 @@ public class AppsListAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!main.getLaunchFragment().openApp(holder.getApp().getApplicationPackageName()))
-                    main.getLaunchTools().runTool(app);
+                main.getLaunchFragment().openApp(holder.getApp().getApplicationPackageName());
             }
         });
 

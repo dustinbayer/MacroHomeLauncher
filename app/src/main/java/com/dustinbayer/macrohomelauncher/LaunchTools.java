@@ -38,9 +38,7 @@ public class LaunchTools {
 
     public static LaunchTools newInstance(MainActivity main) { return new LaunchTools(main); }
 
-    public boolean runTool(AppModel tool) {
-        String name = tool.getApplicationPackageName();
-
+    public boolean runTool(String name) {
         //Toggle app drawer
         if (name.equals(main.getString(R.string.launchtool_appdrawer))) {
             main.getLaunchFragment().toggleAppDrawer();
