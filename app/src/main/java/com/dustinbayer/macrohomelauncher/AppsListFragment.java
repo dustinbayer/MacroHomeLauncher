@@ -5,6 +5,7 @@ import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     private AppsLoader loader;
     private Boolean listShown = false;
     private View progressView;
+    private SwipeRefreshLayout swipeRefresh;
     static final int PROGRESS_ID = 0x00ff0002;
 
     public static AppsListFragment newInstance() { return new AppsListFragment(); }
@@ -62,7 +64,15 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
         view = inflater.inflate(R.layout.fragment_appslist, container, false);
         listView = (ListView) view.findViewById(R.id.apps_list_view);
         progressView = createProgressView();
+        ((FrameLayout)view.findViewById(R.id.progress_frame)).addView(progressView);
         setListShown(false,true);
+        swipeRefresh = view.findViewById(R.id.swipe_refresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshAppList();
+            }
+        });
 
         getLoaderManager().initLoader(0, null, this);
         return view;
@@ -77,7 +87,7 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
 
         ProgressBar progress = new ProgressBar(main, null,
                 android.R.attr.progressBarStyleLarge);
-        progress.setBackground(ContextCompat.getDrawable(main, R.drawable.circle_clear));
+        progress.setBackground(ContextCompat.getDrawable(main, R.drawable.circle_white));
         pframe.addView(progress, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -87,6 +97,13 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     @Override
     public Loader<ArrayList<AppModel>> onCreateLoader(int id, Bundle bundle) {
         return new AppsLoader(main);
+    }
+
+    private void refreshAppList() {
+        swipeRefresh.setRefreshing(false);
+        setListShown(false,true);
+        getLoaderManager().destroyLoader(0);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override

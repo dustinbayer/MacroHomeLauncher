@@ -13,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.eftimoff.patternview.cells.Cell;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dusti on 11/20/2017.
@@ -22,12 +25,14 @@ import java.util.ArrayList;
 public class AppsListAdapter extends BaseAdapter {
     private MainActivity main;
     private ArrayList<AppModel> installedApps;
+    private ArrayList<LinearLayout> macroList;
     private final LayoutInflater inflater;
 
     public AppsListAdapter (MainActivity main, ArrayList<AppModel> installedApps) {
         this.main = main;
         this.installedApps = new ArrayList<>(installedApps);
         inflater = LayoutInflater.from(main);
+        macroList = new ArrayList<>();
     }
 
     @Override
@@ -67,6 +72,7 @@ public class AppsListAdapter extends BaseAdapter {
         });
 
         final LinearLayout macroLayout = view.findViewById(R.id.macro);
+        macroList.add(macroLayout);
         String macro = main.getLaunchFragment().getMacro(app.getApplicationPackageName());
         if(!macro.equals("")) {
             String[] keyArray = MacroTools.getMacroKeyArray(macro);
@@ -76,7 +82,6 @@ public class AppsListAdapter extends BaseAdapter {
                     if(id != 0) {
                         View key = macroLayout.findViewById(id);
                         if (key != null) {
-                            key.setAlpha(1);
                             switch (i) {
                                 case 1:
                                     key.setBackground(ContextCompat.getDrawable(main, R.drawable.dot_white));
@@ -97,13 +102,13 @@ public class AppsListAdapter extends BaseAdapter {
         macroLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                main.getLaunchFragment().editMacro(app, macroLayout);
+                main.getLaunchFragment().editMacro(app);
             }
         });
 
         if(holder.getApp().getApplicationPackageName().equals(main.getString(R.string.launchtool_appdrawer))) {
             if (main.getSharedPref().getBoolean(main.getString(R.string.first_time), true)) {
-                main.getLaunchFragment().editMacro(app, macroLayout);
+                main.getLaunchFragment().editMacro(app);
             }
         }
 
@@ -122,6 +127,55 @@ public class AppsListAdapter extends BaseAdapter {
             this.view = view;
         }
 
+    }
+
+    public LinearLayout getMacroLayout(String app) {
+        for(int i = 0; i < installedApps.size(); i++) {
+            if (app.equals(installedApps.get(i).getApplicationPackageName())) {
+                return macroList.get(i);
+            }
+        }
+        return null;
+    }
+
+    public void setMacroLayout(String app, List<Cell> cells) {
+        clearMacroLayout(app);
+        for (int i = 0; i < cells.size(); i++) {
+            View view = getMacroLayout(app);
+            if(view != null) {
+                View key = view.findViewById(MacroTools.getCellLayoutId(cells.get(i)));
+                switch (i) {
+                    case 0:
+                        key.setBackground(ContextCompat.getDrawable(main, R.drawable.dot_white));
+                        break;
+                    case 1:
+                        key.setBackground(ContextCompat.getDrawable(main, R.drawable.dot_gray));
+                        break;
+                    case 2:
+                        key.setBackground(ContextCompat.getDrawable(main, R.drawable.dot_black));
+                        break;
+                }
+            }
+        }
+    }
+
+    private void clearMacroLayout(String app){
+        LinearLayout macroLayout = getMacroLayout(app);
+        String macro = main.getLaunchFragment().getMacro(app);
+        if(!macro.equals("")) {
+            String[] keyArray = MacroTools.getMacroKeyArray(macro);
+            if(keyArray.length > 0) {
+                for (int i = 1; i < keyArray.length; i++) {
+                    int id = MacroTools.getKeyLayoutId(keyArray[i]);
+                    if(id != 0) {
+                        View key = macroLayout.findViewById(id);
+                        if (key != null) {
+                            key.setBackground(ContextCompat.getDrawable(main, R.drawable.dot));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void cleanUp() {

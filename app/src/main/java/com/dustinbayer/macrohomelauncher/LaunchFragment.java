@@ -37,9 +37,12 @@ public class LaunchFragment extends Fragment {
     private View editBlur;
     private boolean editMacro;
     private AppModel editApp;
-    private LinearLayout macroLayout;
 
     public static LaunchFragment newInstance() { return new LaunchFragment(); }
+
+    /**
+     * - 3+ combo macros
+     */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,7 +128,7 @@ public class LaunchFragment extends Fragment {
 
     private void checkKeys(List<Cell> cells) {
         if(main.getSharedPref().getBoolean(main.getString(R.string.first_time), true)) {
-            setMacro(main.getString(R.string.launchtool_appdrawer), cells);
+            appsListFragment.getAppsListAdapter().setMacroLayout(main.getString(R.string.launchtool_appdrawer), cells);
             SharedPreferences.Editor editor = main.getSharedPref().edit();
             editor.putBoolean(main.getString(R.string.first_time), false);
             editor.commit();
@@ -136,8 +139,14 @@ public class LaunchFragment extends Fragment {
         String key = MacroTools.cellsToKey(cells);
         if(cells.size() == MacroTools.MACRO_SIZE) {
             if (editMacro) {
-                if(!macroExists(key))
-                    setMacro(editApp.getApplicationPackageName(), cells);
+                if(!macroExists(key)) {
+                    appsListFragment.getAppsListAdapter().setMacroLayout(editApp.getApplicationPackageName(), cells);
+                    SharedPreferences.Editor editor = main.getSharedPref().edit();
+                    editor.putString(editApp.getApplicationPackageName(), MacroTools.cellsToKey(cells));
+                    editor.commit();
+                    editBlur.setVisibility(View.GONE);
+                    editMacro = false;
+                }
             } else {
                 openApp(getApp(key));
             }
@@ -145,35 +154,9 @@ public class LaunchFragment extends Fragment {
         clearPattern();
     }
 
-    public void setMacro(String app, List<Cell> cells) {
-
-        for(int i = 0; i < cells.size(); i++) {
-            View view = macroLayout.findViewById(MacroTools.getCellLayoutId(cells.get(i)));
-            view.setAlpha(1);
-            switch (i) {
-                case 0:
-                    view.setBackground(ContextCompat.getDrawable(main, R.drawable.dot_white));
-                    break;
-                case 1:
-                    view.setBackground(ContextCompat.getDrawable(main, R.drawable.dot_gray));
-                    break;
-                case 2:
-                    view.setBackground(ContextCompat.getDrawable(main, R.drawable.dot_black));
-                    break;
-            }
-        }
-
-        SharedPreferences.Editor editor = main.getSharedPref().edit();
-        editor.putString(app, MacroTools.cellsToKey(cells));
-        editor.commit();
-        editBlur.setVisibility(View.GONE);
-        editMacro = false;
-    }
-
-    public void editMacro(AppModel app, LinearLayout macro) {
-        editApp = app;
-        macroLayout = macro;
+    public void editMacro(AppModel app) {
         editMacro = true;
+        editApp = app;
         editBlur.setVisibility(View.VISIBLE);
     }
 

@@ -1,5 +1,6 @@
 package com.dustinbayer.macrohomelauncher;
 
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.eftimoff.patternview.cells.Cell;
@@ -41,6 +42,30 @@ public class MacroTools {
             case 7:
                 return R.id.button_8;
             case 8:
+                return R.id.button_9;
+        }
+        return 0;
+    }
+
+    public static int getKeyButtonId(String key) {
+        switch (key) {
+            case "000-000":
+                return R.id.button_1;
+            case "000-001":
+                return R.id.button_2;
+            case "000-002":
+                return R.id.button_3;
+            case "001-000":
+                return R.id.button_4;
+            case "001-001":
+                return R.id.button_5;
+            case "001-002":
+                return R.id.button_6;
+            case "002-000":
+                return R.id.button_7;
+            case "002-001":
+                return R.id.button_8;
+            case "002-002":
                 return R.id.button_9;
         }
         return 0;
