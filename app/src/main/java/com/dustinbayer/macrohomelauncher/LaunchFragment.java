@@ -131,8 +131,11 @@ public class LaunchFragment extends Fragment {
             appsListFragment.getAppsListAdapter().setMacroLayout(main.getString(R.string.launchtool_appdrawer), cells);
             SharedPreferences.Editor editor = main.getSharedPref().edit();
             editor.putBoolean(main.getString(R.string.first_time), false);
+            editor.putString(editApp.getApplicationPackageName(), MacroTools.cellsToKey(cells));
             editor.commit();
+            editBlur.setVisibility(View.GONE);
             clearPattern();
+            editMacro = false;
             return;
         }
 
