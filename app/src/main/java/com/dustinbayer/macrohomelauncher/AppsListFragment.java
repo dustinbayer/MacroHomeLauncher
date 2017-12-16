@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,7 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     private ArrayList<AppModel> installedApps;
     public ArrayList<AppModel> getInstalledApps() { return installedApps; }
 
-    private RecyclerView.LayoutManager layoutManager;
+   // private RecyclerView.LayoutManager layoutManager;
 
     private AppsLoader loader;
     private Boolean listShown = false;
@@ -87,7 +86,7 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
 
         ProgressBar progress = new ProgressBar(main, null,
                 android.R.attr.progressBarStyleLarge);
-        progress.setBackground(ContextCompat.getDrawable(main, R.drawable.circle_white));
+        //progress.setBackground(ContextCompat.getDrawable(main, R.drawable.circle_white));
         pframe.addView(progress, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 

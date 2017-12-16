@@ -24,15 +24,8 @@ public class LaunchTools {
         ApplicationInfo appDrawerInfo = new ApplicationInfo();
         appDrawerInfo.packageName =  main.getString(R.string.launchtool_appdrawer);
         AppModel appDrawerTool = AppModel.newInstance(main, appDrawerInfo);
-        appDrawerTool.setIcon(main.getDrawable(R.mipmap.ic_appdrawer_round));
+        //appDrawerTool.setIcon(main.getDrawable(R.mipmap.ic_appdrawer_round));
         launchToolsList.add(appDrawerTool);
-
-        //Switch launch orientation
-        ApplicationInfo launchOrientationInfo = new ApplicationInfo();
-        launchOrientationInfo.packageName = main.getString(R.string.launchtool_launchorientation);
-        AppModel launchOrientationTool = AppModel.newInstance(main, launchOrientationInfo);
-        launchOrientationTool.setIcon(main.getDrawable(R.mipmap.ic_launchorientation_round));
-        launchToolsList.add(launchOrientationTool);
 
     }
 
@@ -42,21 +35,6 @@ public class LaunchTools {
         //Toggle app drawer
         if (name.equals(main.getString(R.string.launchtool_appdrawer))) {
             main.getLaunchFragment().toggleAppDrawer();
-            return true;
-        }
-
-        //Switch launch orientation
-        else if (name.equals(main.getString(R.string.launchtool_launchorientation))) {
-            SharedPreferences.Editor editor = main.getSharedPref().edit();
-
-            if(main.getSharedPref().getInt(main.getString(R.string.launch_orientation), R.layout.fragment_launch_right) == R.layout.fragment_launch_right)
-                editor.putInt(main.getString(R.string.launch_orientation), R.layout.fragment_launch_left);
-            else
-                editor.putInt(main.getString(R.string.launch_orientation), R.layout.fragment_launch_right);
-
-            editor.commit();
-
-            main.reloadLaunchFragment();
             return true;
         }
 
