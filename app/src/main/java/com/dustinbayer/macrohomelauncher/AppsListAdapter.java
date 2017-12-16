@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
 /**
@@ -48,19 +51,19 @@ public class AppsListAdapter extends BaseAdapter {
         View view;
 
         view = inflater.inflate(R.layout.item_appslist, parent, false);
-//
-//        final ViewHolder holder = new ViewHolder(main, view);
-//        final AppModel app = installedApps.get(position);
-//        ((ImageView)view.findViewById(R.id.icon)).setImageDrawable(app.getIcon());
-//        ((TextView)view.findViewById(R.id.text)).setText(app.getLabel());
-//        holder.setApp(app);
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                main.getLaunchFragment().openApp(holder.getApp().getApplicationPackageName());
-//            }
-//        });
-//
+
+        final ViewHolder holder = new ViewHolder(main, view);
+        final AppModel app = installedApps.get(position);
+        ((ImageView)view.findViewById(R.id.icon)).setImageDrawable(app.getIcon());
+        ((TextView)view.findViewById(R.id.text)).setText(app.getLabel());
+        holder.setApp(app);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                main.getLaunchFragment().openApp(holder.getApp().getApplicationPackageName());
+            }
+        });
+
 //        final LinearLayout macroLayout = view.findViewById(R.id.macro);
 //        macroList.add(macroLayout);
 //        String macro = main.getLaunchFragment().getMacro(app.getApplicationPackageName());
@@ -95,12 +98,6 @@ public class AppsListAdapter extends BaseAdapter {
 //                main.getLaunchFragment().editMacro(app);
 //            }
 //        });
-//
-//        if(holder.getApp().getApplicationPackageName().equals(main.getString(R.string.launchtool_appdrawer))) {
-//            if (main.getSharedPref().getBoolean(main.getString(R.string.first_time), true)) {
-//                main.getLaunchFragment().editMacro(app);
-//            }
-//        }
 
         return view;
     }

@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.util.Map;
 
@@ -28,7 +31,6 @@ public class LaunchFragment extends Fragment {
     public AppsListFragment getAppsListFragment() { return appsListFragment; }
 
     //private MacroViewGroup macroViewGroup;
-    private int cellsAdded = 0;
     private View editBlur;
     private boolean editMacro;
     private AppModel editApp;
@@ -54,22 +56,15 @@ public class LaunchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_launch, container, false);
-        drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
         appsListFragment = AppsListFragment.newInstance();
         getChildFragmentManager().beginTransaction().add(R.id.apps_list, appsListFragment).commit();
         editBlur = view.findViewById(R.id.edit_blur);
         editBlur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!main.getSharedPref().getBoolean(main.getString(R.string.first_time), true)) {
-                    editBlur.setVisibility(View.GONE);
-                }
+                editBlur.setVisibility(View.GONE);
             }
         });
-        if(main.getSharedPref().getBoolean(main.getString(R.string.first_time), true)) {
-            drawerLayout.openDrawer(view.findViewById(R.id.apps_list));
-            editBlur.setVisibility(View.VISIBLE);
-        }
         
 //        patternView = view.findViewById(R.id.patternView);
 //        patternView.setOnPatternCellAddedListener(new PatternView.OnPatternCellAddedListener() {
@@ -193,19 +188,6 @@ public class LaunchFragment extends Fragment {
             return true;
         }
         return false;
-    }
-
-    public void toggleAppDrawer() {
-        View drawerView = view.findViewById(R.id.apps_list);
-        if(drawerLayout.isDrawerOpen(drawerView)) {
-            drawerLayout.closeDrawer(drawerView, true);
-        } else {
-            drawerLayout.openDrawer(drawerView, true);
-        }
-    }
-
-    public boolean isDrawerOpen() {
-        return drawerLayout.isDrawerOpen(view.findViewById(R.id.apps_list));
     }
 
     public void cleanUp() {

@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">MacroHome Lite Launcher</string>
-    <string name="first_time">firstTime</string>
     <string name="launchtool_appdrawer">com.dustinbayer.macrohomelauncher.appdrawer</string>
 </resources>

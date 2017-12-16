@@ -1,6 +1,5 @@
 package com.dustinbayer.macrohomelauncher;
 
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class LaunchTools {
         ApplicationInfo appDrawerInfo = new ApplicationInfo();
         appDrawerInfo.packageName =  main.getString(R.string.launchtool_appdrawer);
         AppModel appDrawerTool = AppModel.newInstance(main, appDrawerInfo);
-        //appDrawerTool.setIcon(main.getDrawable(R.mipmap.ic_appdrawer_round));
+        appDrawerTool.setIcon(main.getDrawable(R.mipmap.ic_launcher));
         launchToolsList.add(appDrawerTool);
 
     }
@@ -34,7 +33,7 @@ public class LaunchTools {
     public boolean runTool(String name) {
         //Toggle app drawer
         if (name.equals(main.getString(R.string.launchtool_appdrawer))) {
-            main.getLaunchFragment().toggleAppDrawer();
+            main.getLaunchFragment().getAppsListFragment().toggleBottomSheet();
             return true;
         }
 

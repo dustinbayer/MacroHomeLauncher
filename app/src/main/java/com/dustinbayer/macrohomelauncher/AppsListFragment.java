@@ -1,20 +1,26 @@
 package com.dustinbayer.macrohomelauncher;
 
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -36,12 +42,14 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     private ArrayList<AppModel> installedApps;
     public ArrayList<AppModel> getInstalledApps() { return installedApps; }
 
-   // private RecyclerView.LayoutManager layoutManager;
-
+    private LinearLayout appsListBottomSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private RelativeLayout bottomSheetPeek;
     private AppsLoader loader;
     private Boolean listShown = false;
+    private Boolean reachedTop = false;
+    private Boolean canCloseBottomSheet = false;
     private View progressView;
-    private SwipeRefreshLayout swipeRefresh;
     static final int PROGRESS_ID = 0x00ff0002;
 
     public static AppsListFragment newInstance() { return new AppsListFragment(); }
@@ -60,18 +68,32 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_appslist, container, false);
+        view = inflater.inflate(R.layout.bottomsheet_appslist, container, false);
+        appsListBottomSheet = view.findViewById(R.id.appslist_bottomsheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(appsListBottomSheet);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
+        });
+        bottomSheetPeek = view.findViewById(R.id.bottom_sheet_peek);
+        bottomSheetPeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleBottomSheet();
+            }
+        });
         listView = (ListView) view.findViewById(R.id.apps_list_view);
         progressView = createProgressView();
         ((FrameLayout)view.findViewById(R.id.progress_frame)).addView(progressView);
         setListShown(false,true);
-        swipeRefresh = view.findViewById(R.id.swipe_refresh);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshAppList();
-            }
-        });
 
         getLoaderManager().initLoader(0, null, this);
         return view;
@@ -99,7 +121,6 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     }
 
     private void refreshAppList() {
-        swipeRefresh.setRefreshing(false);
         setListShown(false,true);
         getLoaderManager().destroyLoader(0);
         getLoaderManager().initLoader(0, null, this);
@@ -176,5 +197,17 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
             loader.cleanUp();
             loader = null;
         }
+    }
+
+    public void toggleBottomSheet() {
+        if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+    }
+
+    public Boolean isBottomSheetExpanded() {
+        return bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED;
     }
 }
