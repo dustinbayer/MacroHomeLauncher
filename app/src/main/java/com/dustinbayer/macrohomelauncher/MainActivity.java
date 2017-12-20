@@ -49,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(didStart) {
             ((ImageView)findViewById(R.id.wallpaper)).setImageDrawable(wallpaperManager.getDrawable());
-            if(!launchFragment.getAppsListFragment().isBottomSheetExpanded())
-                reloadLaunchFragment();
+            reloadLaunchFragment();
         }
     }
 

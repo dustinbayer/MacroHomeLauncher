@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -63,6 +64,8 @@ public class LaunchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 editBlur.setVisibility(View.GONE);
+                editMacro = false;
+                editApp = null;
             }
         });
         
@@ -105,6 +108,12 @@ public class LaunchFragment extends Fragment {
 //        });
 
         return view;
+    }
+
+    public void reloadApps() {
+        appsListFragment.cleanUp();
+        appsListFragment = AppsListFragment.newInstance();
+        getChildFragmentManager().beginTransaction().replace(R.id.apps_list, appsListFragment).commit();
     }
 
     private void clearPattern() {

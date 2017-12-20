@@ -12,22 +12,6 @@
         android:scaleType="centerCrop"
         />
 
-    <ImageView
-        android:id="@+id/top_gradient"
-        android:layout_width="match_parent"
-        android:layout_height="6dp"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/linear_gradient"
-        />
-    <ImageView
-        android:id="@+id/bottom_gradient"
-        android:layout_width="match_parent"
-        android:layout_height="6dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/linear_gradient"
-        android:rotation="180"
-        />
-
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"

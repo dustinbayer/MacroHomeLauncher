@@ -7,7 +7,7 @@
         <LinearLayout
             android:id="@+id/appslist_bottomsheet"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="320dp"
             android:orientation="vertical"
             app:behavior_hideable="false"
             app:behavior_peekHeight="24dp"
@@ -29,20 +29,24 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#55000000">
-
-                <ListView
-                    android:id="@+id/apps_list_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="none"
-                    android:divider="#fff"
-                    android:dividerHeight="1dp"/>
+                android:background="#fff">
 
                 <FrameLayout
                     android:id="@+id/progress_frame"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
+
+                <ListView
+                    android:id="@+id/apps_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:fastScrollEnabled="true"
+                    android:fastScrollAlwaysVisible="true"
+                    android:scrollbars="vertical"
+                    android:divider="#444"
+                    android:dividerHeight="1dp"/>
+
 
             </RelativeLayout>
 

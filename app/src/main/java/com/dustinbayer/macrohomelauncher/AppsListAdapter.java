@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -64,7 +65,14 @@ public class AppsListAdapter extends BaseAdapter {
             }
         });
 
-//        final LinearLayout macroLayout = view.findViewById(R.id.macro);
+        final RelativeLayout macroLayout = view.findViewById(R.id.macro_layout);
+        macroLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                main.getLaunchFragment().editMacro(app);
+            }
+        });
+
 //        macroList.add(macroLayout);
 //        String macro = main.getLaunchFragment().getMacro(app.getApplicationPackageName());
 //        if(!macro.equals("")) {
@@ -92,13 +100,6 @@ public class AppsListAdapter extends BaseAdapter {
 //            }
 //        }
 //
-//        macroLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                main.getLaunchFragment().editMacro(app);
-//            }
-//        });
-
         return view;
     }
 

@@ -1,5 +1,6 @@
 package com.dustinbayer.macrohomelauncher;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,7 +36,7 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     private View view;
 
     private ListView listView;
-    public ListView getRecyclerView() { return listView; }
+    public ListView getListView() { return listView; }
 
     private AppsListAdapter appsListAdapter;
     public AppsListAdapter getAppsListAdapter() { return appsListAdapter; }
@@ -47,8 +49,6 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     private RelativeLayout bottomSheetPeek;
     private AppsLoader loader;
     private Boolean listShown = false;
-    private Boolean reachedTop = false;
-    private Boolean canCloseBottomSheet = false;
     private View progressView;
     static final int PROGRESS_ID = 0x00ff0002;
 
@@ -70,12 +70,29 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.bottomsheet_appslist, container, false);
         appsListBottomSheet = view.findViewById(R.id.appslist_bottomsheet);
+        bottomSheetPeek = view.findViewById(R.id.bottom_sheet_peek);
+        bottomSheetPeek.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN ) {
+                    toggleBottomSheet();
+                    return true;
+                }
+
+                return false;
+            }
+        });
         bottomSheetBehavior = BottomSheetBehavior.from(appsListBottomSheet);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else if(newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    main.getLaunchFragment().reloadApps();
+                } else if(newState == BottomSheetBehavior.STATE_EXPANDED) {
+
                 }
             }
 
@@ -83,14 +100,8 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
             }
         });
-        bottomSheetPeek = view.findViewById(R.id.bottom_sheet_peek);
-        bottomSheetPeek.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleBottomSheet();
-            }
-        });
         listView = (ListView) view.findViewById(R.id.apps_list_view);
+        listView.setFastScrollEnabled(true);
         progressView = createProgressView();
         ((FrameLayout)view.findViewById(R.id.progress_frame)).addView(progressView);
         setListShown(false,true);
@@ -99,16 +110,16 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
         return view;
     }
 
+
     private View createProgressView() {
         LinearLayout pframe = new LinearLayout(main);
         pframe.setId(PROGRESS_ID);
         pframe.setOrientation(LinearLayout.VERTICAL);
-        pframe.setVisibility(View.GONE);
         pframe.setGravity(Gravity.CENTER);
 
         ProgressBar progress = new ProgressBar(main, null,
                 android.R.attr.progressBarStyleLarge);
-        //progress.setBackground(ContextCompat.getDrawable(main, R.drawable.circle_white));
+        progress.setBackgroundColor(Color.WHITE);
         pframe.addView(progress, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -118,12 +129,6 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
     @Override
     public Loader<ArrayList<AppModel>> onCreateLoader(int id, Bundle bundle) {
         return new AppsLoader(main);
-    }
-
-    private void refreshAppList() {
-        setListShown(false,true);
-        getLoaderManager().destroyLoader(0);
-        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -185,6 +190,9 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
         view = null;
         listView = null;
         progressView = null;
+        appsListBottomSheet  = null;
+        bottomSheetPeek = null;
+        bottomSheetBehavior = null;
         if(appsListAdapter != null) {
             appsListAdapter.cleanUp();
             appsListAdapter = null;
@@ -201,13 +209,16 @@ public class AppsListFragment extends Fragment  implements LoaderManager.LoaderC
 
     public void toggleBottomSheet() {
         if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            ViewGroup.LayoutParams params = bottomSheetPeek.getLayoutParams();
+            params.height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics());
+            bottomSheetPeek.setLayoutParams(params);
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
+            ViewGroup.LayoutParams params = bottomSheetPeek.getLayoutParams();
+            params.height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics());
+            bottomSheetPeek.setLayoutParams(params);
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     }
 
-    public Boolean isBottomSheetExpanded() {
-        return bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED;
-    }
 }
