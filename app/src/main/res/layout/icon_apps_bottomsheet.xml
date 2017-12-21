@@ -39,7 +39,7 @@
         <View
             android:layout_width="4dp"
             android:layout_height="4dp"
-            android:background="#fff"
+            android:background="#666"
             android:layout_margin="1dp"/>
         <View
             android:layout_width="4dp"
