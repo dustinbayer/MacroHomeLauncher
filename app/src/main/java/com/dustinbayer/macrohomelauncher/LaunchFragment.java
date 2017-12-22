@@ -31,7 +31,7 @@ public class LaunchFragment extends Fragment {
     private AppsListFragment appsListFragment;
     public AppsListFragment getAppsListFragment() { return appsListFragment; }
 
-    //private MacroViewGroup macroViewGroup;
+    private MacroLayout macroLayout;
     private View editBlur;
     private boolean editMacro;
     private AppModel editApp;
@@ -68,7 +68,8 @@ public class LaunchFragment extends Fragment {
                 editApp = null;
             }
         });
-        
+
+        macroLayout = view.findViewById(R.id.macro_layout);
 //        patternView = view.findViewById(R.id.patternView);
 //        patternView.setOnPatternCellAddedListener(new PatternView.OnPatternCellAddedListener() {
 //            @Override
@@ -205,6 +206,10 @@ public class LaunchFragment extends Fragment {
         if(appsListFragment != null) {
             appsListFragment.cleanUp();
             appsListFragment = null;
+        }
+        if(macroLayout != null) {
+            macroLayout.cleanUp();
+            macroLayout = null;
         }
     }
 }
